@@ -9,3 +9,5 @@ Node.js と PHP のプロジェクト共通の設定（Biome／PHP-CS-Fixer・PH
 - ⚠⚠ **Biome の版は `package.json` の `peerDependencies` と `devDependencies` で同じ値に固定する。** PHP の道具の版は `composer.json` の `require-dev` と README で同じ値にする
 - ルールを足す・外すときは、`test/fixtures/` に検体を足して `test/expected.json` に期待値を書く。期待値は実測から書く
 - ⚠ public なリポジトリなので、他 org のリポジトリ名を書かない
+- **依頼の受け方（#3）:** 設定そのものの依頼は gobou、規約の考え方や言語をまたぐ判断は ginseng-style（README の「依頼・指摘の出し先」）。⚠ PR で来たら、受け取った側が Issue を起こして紐づけ、`request` ラベルを付ける。⚠ 棚卸しは ginseng-style の sync スキルが gobou も集める（pooza/ginseng-style#143）
+- ⚠ **PR を締める前に Codex の指摘を走査する**（ginseng-style の codex-review スキル）。gobou#2 で P1 を見ないままマージした
