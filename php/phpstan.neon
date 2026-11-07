@@ -1,0 +1,14 @@
+# gobou の PHPStan の共通の設定。利用側の phpstan.neon から includes で読む。
+#
+#   includes:
+#     - vendor/pooza/gobou/php/phpstan.neon
+#     - phpstan-baseline.neon   # 既存の違反（入れたときに生成する）
+#   parameters:
+#     paths: [src]
+#
+# ⚠ 水準は 5 から始める（型の宣言の無い既存のコードでも、引数の型の誤り・未定義のメソッドなど
+# 不具合につながるものが出る水準）。既存の違反は baseline に逃がし、新しいコードで増やさない。
+# ⚠ PHP の版は利用側の composer.json の require.php から自動で読まれる。
+parameters:
+  level: 5
+  reportUnmatchedIgnoredErrors: true
