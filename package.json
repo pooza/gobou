@@ -1,0 +1,26 @@
+{
+  "name": "gobou",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Node.js プロジェクト共通の Biome 設定（ginseng-style の言語別の配布物）",
+  "license": "MIT",
+  "repository": "github:pooza/gobou",
+  "exports": {
+    "./biome": "./biome.json"
+  },
+  "files": [
+    "biome.json"
+  ],
+  "peerDependencies": {
+    "@biomejs/biome": "2.6.6"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.6.6"
+  },
+  "scripts": {
+    "test": "node test/run.mjs"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

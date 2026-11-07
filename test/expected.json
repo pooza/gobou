@@ -1,0 +1,16 @@
+{
+  "_comment": "検体ごとに、出るべき診断のカテゴリ。⚠ 実測から書く（実装の定数から作らない）。空の配列は「何も出ないこと」",
+  "p01_vfor_nokey.vue": ["lint/correctness/useVueVForKey"],
+  "p02_vif_with_vfor.vue": ["lint/correctness/noVueVIfWithVFor"],
+  "p03_dup_attr.vue": ["lint/correctness/noDuplicateAttributes"],
+  "p04_v_html.vue": ["lint/nursery/noVueVHtml"],
+  "p05_mutating_props.vue": ["lint/nursery/noVueMutatingProps", "lint/a11y/useButtonType"],
+  "p07_parse_error.vue": ["parse"],
+  "p09_unused_template_ref_in_script.vue": ["lint/correctness/noUnusedVariables"],
+  "p10_script_eqeq.vue": ["lint/suspicious/noDoubleEquals"],
+  "p11_img_no_alt.vue": ["lint/a11y/useAltText"],
+  "p12_valid_vmodel.vue": ["lint/nursery/useVueValidVModel"],
+  "t01_eqeq.ts": ["lint/suspicious/noDoubleEquals"],
+  "t02_unused.ts": ["lint/correctness/noUnusedVariables"],
+  "t03_clean.ts": []
+}

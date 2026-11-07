@@ -1,0 +1,107 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.6.6/schema.json",
+  "files": {
+    "includes": [
+      "**",
+      "!**/*.min.js",
+      "!**/dist",
+      "!**/build",
+      "!**/coverage"
+    ]
+  },
+  "formatter": {
+    "enabled": true,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineWidth": 100
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "trailingCommas": "all",
+      "semicolons": "always",
+      "arrowParentheses": "always"
+    }
+  },
+  "html": {
+    "experimentalFullSupportEnabled": true,
+    "formatter": {
+      "enabled": true,
+      "indentScriptAndStyle": false
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "preset": "recommended",
+      "suspicious": {
+        "noExplicitAny": "warn"
+      },
+      "correctness": {
+        "noVueDataObjectDeclaration": "error",
+        "noVueDuplicateKeys": "error",
+        "noVueImportCompilerMacros": "error",
+        "noVueRefAsOperand": "error",
+        "noVueReservedKeys": "error",
+        "noVueReservedProps": "error",
+        "noVueSetupPropsReactivityLoss": "error",
+        "noVueVIfWithVFor": "error",
+        "noVueVOnNumberValues": "error",
+        "useVueVForKey": "error",
+        "useVueValidTemplateRoot": "error",
+        "useVueValidVBind": "error",
+        "useVueValidVCloak": "error",
+        "useVueValidVElse": "error",
+        "useVueValidVElseIf": "error",
+        "useVueValidVFor": "error",
+        "useVueValidVHtml": "error",
+        "useVueValidVIf": "error",
+        "useVueValidVOn": "error",
+        "useVueValidVOnce": "error",
+        "useVueValidVPre": "error",
+        "useVueValidVText": "error"
+      },
+      "nursery": {
+        "noVueDeprecatedConfigKeyCodes": "error",
+        "noVueDeprecatedDeleteSet": "error",
+        "noVueDeprecatedDestroyedLifecycle": "error",
+        "noVueDeprecatedEventsApi": "error",
+        "noVueDeprecatedFunctionalTemplate": "error",
+        "noVueDeprecatedHtmlElementIs": "error",
+        "noVueDeprecatedInlineTemplate": "error",
+        "noVueDeprecatedListeners": "error",
+        "noVueDeprecatedModelDefinition": "error",
+        "noVueDeprecatedPropsDefaultThis": "error",
+        "noVueDeprecatedRouterLinkTagProp": "error",
+        "noVueDeprecatedScopeAttribute": "error",
+        "noVueDeprecatedScopedSlots": "error",
+        "noVueDeprecatedSlotAttribute": "error",
+        "noVueDeprecatedSlotScope": "error",
+        "noVueDeprecatedVBindSync": "error",
+        "noVueDeprecatedVOnNativeModifier": "error",
+        "useVueValidAttributeName": "error",
+        "useVueValidDefaultProp": "error",
+        "useVueValidDefineEmits": "error",
+        "useVueValidDefineOptions": "error",
+        "useVueValidDefineProps": "error",
+        "useVueValidNextTick": "error",
+        "useVueValidVIs": "error",
+        "useVueValidVMemo": "error",
+        "useVueValidVModel": "error",
+        "useVueValidVShow": "error",
+        "useVueValidVSlot": "error",
+        "noVueMutatingProps": "error",
+        "noVueSideEffectsInComputed": "error",
+        "noVueVHtml": "warn",
+        "noVueRefObjectReactivityLoss": "warn",
+        "noVueUnusedRefs": "warn",
+        "noVueUnusedEmitDeclarations": "warn"
+      }
+    }
+  },
+  "yaml": {
+    "formatter": {
+      "quoteStyle": "single"
+    }
+  }
+}
