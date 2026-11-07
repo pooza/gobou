@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+  WordPress だけに足す、WPCS の Security の検査（出力のエスケープ・nonce・入力のサニタイズ・
+  安全なリダイレクト・SQL の prepare）。⚠ WPCS の書き方の規則（タブのインデントなど）は PER-CS と
+  ぶつかるので使わない（pooza/ginseng-style#142）。
+
+  利用側の phpcs.xml.dist:
+    <rule ref="vendor/pooza/gobou/php/phpcs-wordpress-security.xml"/>
+-->
+<ruleset name="gobou-wordpress-security">
+  <description>gobou: WordPress の Security の検査だけ</description>
+  <rule ref="WordPress.Security.EscapeOutput"/>
+  <rule ref="WordPress.Security.NonceVerification"/>
+  <rule ref="WordPress.Security.ValidatedSanitizedInput"/>
+  <rule ref="WordPress.Security.SafeRedirect"/>
+  <rule ref="WordPress.DB.PreparedSQL"/>
+</ruleset>
