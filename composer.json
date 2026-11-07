@@ -13,11 +13,18 @@
         "wp-coding-standards/wpcs": "3.4.1"
     },
     "config": {
+        "platform": {
+            "php": "8.3.0"
+        },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         }
     },
     "archive": {
-        "exclude": ["/test", "/node_modules", "/.github"]
+        "exclude": [
+            "/test",
+            "/node_modules",
+            "/.github"
+        ]
     }
 }

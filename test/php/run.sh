@@ -18,9 +18,14 @@ grep -qx format_bad.php <<<"$changed" || ng 'php-cs-fixer: format_bad.php が直
 grep -qx format_good.php <<<"$changed" && ng 'php-cs-fixer: format_good.php が書き換わる'
 
 # 静的解析: 共通の設定（水準 5）で、出るべきものが出る
+# ⚠ phpVersion を 8.4 にする。gobou の composer.json は platform.php が 8.3 なので、既定では 8.3 として
+# 検査され、PHP 8.4 で非推奨になった書き方（parameter.implicitlyNullable）が出ない（それが正しい）。
+# 8.4 の利用側（移行中のもの）で出ることを確かめるため、ここだけ明示する。
 cat > /tmp/gobou-phpstan.neon <<NEON
 includes:
   - $(pwd)/php/phpstan.neon
+parameters:
+  phpVersion: 80400
 NEON
 ids=$($bin/phpstan analyse -c /tmp/gobou-phpstan.neon --no-progress --error-format=json test/php/analyse_level5.php test/php/analyse_nullable.php 2>/dev/null | php -r '$d=json_decode(stream_get_contents(STDIN),true); foreach($d["files"] as $p=>$v) foreach($v["messages"] as $m) echo basename($p),":",$m["identifier"] ?? "?","\n";')
 grep -qx 'analyse_level5.php:argument.type' <<<"$ids" || ng "phpstan: analyse_level5.php に argument.type が出ない（出たもの: $ids）"
