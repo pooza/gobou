@@ -12,7 +12,7 @@ Node.js プロジェクト共通の [Biome](https://biomejs.dev/) の設定。[g
 {
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "gobou": "github:pooza/gobou#v0.1.0"
+    "gobou": "github:pooza/gobou#v0.2.0"
   },
   "scripts": {
     "lint": "biome check .",
@@ -32,7 +32,7 @@ Node.js プロジェクト共通の [Biome](https://biomejs.dev/) の設定。[g
 ```
 
 - ⚠⚠ **`@biomejs/biome` は gobou と同じ版に固定する**（`^` を付けない）。Vue のルールの一部は nursery（安定前）で、版が変わると挙動が変わりうる
-- ⚠ **gobou はタグで固定する**（`#v0.1.0`）。`#main` にしない
+- ⚠ **gobou はタグで固定する**（`#v0.2.0`）。`#main` にしない
 - ⚠ `vcs` は利用側に置く。共有の設定に入れると、Biome は gobou の側で `.gitignore` を探して落ちる
 
 ### 対象から外すもの
@@ -48,6 +48,7 @@ Node.js プロジェクト共通の [Biome](https://biomejs.dev/) の設定。[g
 - `preset: recommended` を土台にする
 - 🔴 **Vue のルールは recommended に入っていないので、明示して有効にしている。** correctness の Vue のルールはすべて、nursery は構文の正しさ（`useVueValid*`）・廃止された書き方（`noVueDeprecated*`）・不具合につながるものだけ。書き方の揃え方の nursery は入れていない
 - `noExplicitAny` は warn
+- a11y はグループごと warn（recommended に無い a11y のルールも warn で入る。0.2.0 で直した — 0.1.0 は error のままだった）
 - 整形: スペース 2・1 行 100・シングルクォート・末尾のカンマ・セミコロンあり。Vue のテンプレートも Biome で整形する（`html.experimentalFullSupportEnabled`。実験的）
 
 ## 版を上げるとき
