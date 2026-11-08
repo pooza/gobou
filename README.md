@@ -43,6 +43,37 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 { "files": { "includes": ["!public/vendor"] } }
 ```
 
+### `--write` のあとは動かして確かめる
+
+`biome check --write` が当てるのは Biome が「安全」とする修正だけだが、**実行時に壊れる形が 2 つある**（2026-11-07 に導入先で踏んだ・Biome 2.6.6 で実測。pooza/gobou#5）。🔴 **どちらもビルドや型検査では捕まらない。** `--write` のあとは、ビルドだけでなく実際に動かして確かめる。
+
+- **`complexity/useArrowFunction`** — `this` を使わない関数式を arrow 関数にする。🔴 **`new` で呼ばれる関数**（例: CKEditor 5 の `extraPlugins` に渡す plugin の関数）は arrow にすると `TypeError` になる。**関数宣言にして名前で渡す**（宣言は対象にならない）
+
+  ```js
+  function UploadAdapterPlugin(editor) {
+    // ...
+  }
+  ClassicEditor.create(element, { extraPlugins: [UploadAdapterPlugin] });
+  ```
+
+  - 式のまま置くなら、変数に入れて理由を添えて抑止する（`// biome-ignore lint/complexity/useArrowFunction: CKEditor が new で呼ぶ`）。🔴 **配列の要素の位置に書いた抑止は効かない**（`suppressions/unused` になり、修正もそのまま当たる。2.6.6 で実測）
+  - ⚠ `this` を使っている関数は、もともと対象にならない
+
+- **`suspicious/noRedundantUseStrict`** — `'use strict'` を消す。Biome は `.js` を ES モジュールとみなす（`package.json` に `"type": "module"` が無くても）ので冗長と判断するが、🔴 **CommonJS では strict mode が外れる。** `.cjs` は対象にならない。CommonJS の `.js` が残っているディレクトリでは、利用側でこのルールを切る
+
+  ```json
+  {
+    "overrides": [
+      {
+        "includes": ["server/**"],
+        "linter": { "rules": { "suspicious": { "noRedundantUseStrict": "off" } } }
+      }
+    ]
+  }
+  ```
+
+  ⚠ 拡張子を `.cjs` に変えられるなら、そのほうがよい（ルールを切らずに済む）
+
 ## 中身
 
 - `preset: recommended` を土台にする
