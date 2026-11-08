@@ -4,28 +4,54 @@
 // biome.json で明示して有効にしているので、版を上げたときに名前が変わる・グループが移るなどで
 // 黙って外れると、検査が減ったことに誰も気づかない。ここで赤にする。
 import { execFileSync } from 'node:child_process';
-import { readFileSync } from 'node:fs';
+import { readdirSync, readFileSync } from 'node:fs';
 import { basename } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 const expected = JSON.parse(readFileSync(new URL('./expected.json', import.meta.url), 'utf8'));
 delete expected._comment;
 
+const root = fileURLToPath(new URL('..', import.meta.url));
+// ⚠ `npx biome` は名前で解決するので、手元に @biomejs/biome が無いと npm の別物（`biome` パッケージ）を入れて走らせる。直接のパスで呼ぶ
+const biome = fileURLToPath(new URL('../node_modules/@biomejs/biome/bin/biome', import.meta.url));
+
+const fail = (message, detail) => {
+  console.error(message);
+  if (detail) console.error(detail);
+  process.exit(1);
+};
+
 let out;
 try {
   out = execFileSync(
-    'npx',
-    ['biome', 'lint', '--reporter=json', '--max-diagnostics=1000', 'test/fixtures'],
-    {
-      encoding: 'utf8',
-      stdio: ['ignore', 'pipe', 'pipe'],
-    },
+    process.execPath,
+    [biome, 'lint', '--reporter=json', '--max-diagnostics=1000', 'test/fixtures'],
+    { cwd: root, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] },
   );
 } catch (e) {
-  // 診断があると終了コードは 1。出力が JSON なら続ける
+  // 診断があると終了コードは 1。それ以外（設定の誤り・未知のルール名など）は Biome の stderr を出して止める
+  if (e.status !== 1 || !e.stdout)
+    fail(`Biome が異常終了した（終了コード ${e.status}）`, e.stderr || e.message);
   out = e.stdout;
 }
 
-const report = JSON.parse(out);
+let report;
+try {
+  report = JSON.parse(out);
+} catch {
+  fail('Biome の出力が JSON ではない', out.slice(0, 2000));
+}
+
+// 🔴 検体が lint の対象から外れると、「何も出ない」の期待値は黙って緑になる。検査したファイル数を数える
+const fixtures = readdirSync(new URL('./fixtures', import.meta.url)).length;
+const summary = report.summary ?? {};
+const checked = (summary.changed ?? 0) + (summary.unchanged ?? 0);
+if (checked !== fixtures || summary.skipped) {
+  fail(
+    `検体 ${fixtures} 個のうち、検査されたのは ${checked} 個（skipped: ${summary.skipped ?? '不明'}）`,
+  );
+}
+
 const actual = new Map();
 for (const d of report.diagnostics ?? []) {
   const path = d.location?.path;
@@ -41,13 +67,13 @@ for (const [file, categories] of Object.entries(expected)) {
   const got = actual.get(file) ?? new Set();
   if (categories.length === 0 && got.size > 0) {
     failures.push(
-      `${file}: 何も出ないはずが ${[...got].filter((c) => !c.includes('@')).join(', ')}`,
+      `${file}: 何も出ないはずが ${[...got].filter((x) => !x.includes('@')).join(', ')}`,
     );
   }
   for (const c of categories) {
     if (!got.has(c))
       failures.push(
-        `${file}: ${c} が出ていない（出たもの: ${[...got].filter((c) => c.includes('@')).join(', ') || 'なし'}）`,
+        `${file}: ${c} が出ていない（出たもの: ${[...got].filter((x) => x.includes('@')).join(', ') || 'なし'}）`,
       );
   }
 }
