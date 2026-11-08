@@ -12,10 +12,14 @@ delete expected._comment;
 
 let out;
 try {
-  out = execFileSync('npx', ['biome', 'lint', '--reporter=json', '--max-diagnostics=1000', 'test/fixtures'], {
-    encoding: 'utf8',
-    stdio: ['ignore', 'pipe', 'pipe'],
-  });
+  out = execFileSync(
+    'npx',
+    ['biome', 'lint', '--reporter=json', '--max-diagnostics=1000', 'test/fixtures'],
+    {
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'pipe'],
+    },
+  );
 } catch (e) {
   // 診断があると終了コードは 1。出力が JSON なら続ける
   out = e.stdout;
@@ -28,16 +32,23 @@ for (const d of report.diagnostics ?? []) {
   const file = basename(typeof path === 'string' ? path : (path?.file ?? ''));
   if (!actual.has(file)) actual.set(file, new Set());
   actual.get(file).add(d.category);
+  // 重さまで見る期待値（`<category>@<severity>`）のために、組でも持つ
+  actual.get(file).add(`${d.category}@${d.severity}`);
 }
 
 const failures = [];
 for (const [file, categories] of Object.entries(expected)) {
   const got = actual.get(file) ?? new Set();
   if (categories.length === 0 && got.size > 0) {
-    failures.push(`${file}: 何も出ないはずが ${[...got].join(', ')}`);
+    failures.push(
+      `${file}: 何も出ないはずが ${[...got].filter((c) => !c.includes('@')).join(', ')}`,
+    );
   }
   for (const c of categories) {
-    if (!got.has(c)) failures.push(`${file}: ${c} が出ていない（出たもの: ${[...got].join(', ') || 'なし'}）`);
+    if (!got.has(c))
+      failures.push(
+        `${file}: ${c} が出ていない（出たもの: ${[...got].filter((c) => c.includes('@')).join(', ') || 'なし'}）`,
+      );
   }
 }
 const unlisted = [...actual.keys()].filter((f) => !(f in expected));

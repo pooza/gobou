@@ -1,0 +1,15 @@
+@import 'tailwindcss';
+
+@theme {
+  --color-brand: #3366ff;
+}
+
+@utility content-auto {
+  content-visibility: auto;
+}
+
+@layer components {
+  .btn {
+    @apply rounded px-4 py-2;
+  }
+}

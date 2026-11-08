@@ -30,13 +30,32 @@
       "indentScriptAndStyle": false
     }
   },
+  "css": {
+    "parser": {
+      "tailwindDirectives": true
+    }
+  },
   "linter": {
     "enabled": true,
     "rules": {
       "preset": "recommended",
       "a11y": "warn",
+      "complexity": {
+        "noExcessiveCognitiveComplexity": {
+          "level": "warn",
+          "options": {
+            "maxAllowedComplexity": 15
+          }
+        }
+      },
       "suspicious": {
-        "noExplicitAny": "warn"
+        "noExplicitAny": "warn",
+        "noUnknownAtRules": {
+          "level": "error",
+          "options": {
+            "ignore": ["tailwind"]
+          }
+        }
       },
       "correctness": {
         "noVueDataObjectDeclaration": "error",

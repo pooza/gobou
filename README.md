@@ -80,6 +80,9 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 - 🔴 **Vue のルールは recommended に入っていないので、明示して有効にしている。** correctness の Vue のルールはすべて、nursery は構文の正しさ（`useVueValid*`）・廃止された書き方（`noVueDeprecated*`）・不具合につながるものだけ。書き方の揃え方の nursery は入れていない
 - `noExplicitAny` は warn
 - a11y はグループごと warn（recommended に無い a11y のルールも warn で入る。0.2.0 で直した — 0.1.0 は error のままだった）
+- 認知的複雑度（`noExcessiveCognitiveComplexity`）は warn・しきい値 15（Biome の既定と同じ値を明示）。⚠ 入れた時点で利用側に大量に出うる（依頼元の 1 本で 135 件）ので、error にはしていない。減らすのは各利用側で（#8）
+  - ⚠ 自前の設定の `overrides` で `"includes": ["*.ts"]` と書くと、Biome 2 ではリポジトリ直下のファイルにしか当たらない。`src` の中まで効かせるなら `"**/*.ts"`。ルールの名前が書いてあっても効いているとは限らない
+- CSS の Tailwind の記法を許可する（#7）。v4 のディレクティブ（`@apply`・`@theme`・`@utility` など）は `css.parser.tailwindDirectives`、⚠ **v3 の `@tailwind` はそれだけでは通らない**ので `noUnknownAtRules` の `ignore` に `tailwind` を足している。それ以外の未知の at-rule は error のまま
 - 整形: スペース 2・1 行 100・シングルクォート・末尾のカンマ・セミコロンあり。Vue のテンプレートも Biome で整形する（`html.experimentalFullSupportEnabled`。実験的）
 
 ## 版を上げるとき
