@@ -1,5 +1,5 @@
 {
-  "_comment": "検体ごとに、出るべき診断のカテゴリ。⚠ 実測から書く（実装の定数から作らない）。空の配列は「何も出ないこと」",
+  "_comment": "検体ごとに、出るべき診断のカテゴリ。⚠ 実測から書く（実装の定数から作らない）。空の配列は「何も出ないこと」。`@warning` などを付けると重さまで見る",
   "p01_vfor_nokey.vue": ["lint/correctness/useVueVForKey"],
   "p02_vif_with_vfor.vue": ["lint/correctness/noVueVIfWithVFor"],
   "p03_dup_attr.vue": ["lint/correctness/noDuplicateAttributes"],
@@ -12,5 +12,10 @@
   "p12_valid_vmodel.vue": ["lint/nursery/useVueValidVModel"],
   "t01_eqeq.ts": ["lint/suspicious/noDoubleEquals"],
   "t02_unused.ts": ["lint/correctness/noUnusedVariables"],
-  "t03_clean.ts": []
+  "t03_clean.ts": [],
+  "t04_complex.ts": ["lint/complexity/noExcessiveCognitiveComplexity@warning"],
+  "t05_simple_enough.ts": [],
+  "c01_tailwind_v3.css": [],
+  "c02_tailwind_v4.css": [],
+  "c03_unknown_at_rule.css": ["lint/suspicious/noUnknownAtRules@error"]
 }
