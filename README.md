@@ -12,7 +12,7 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 {
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "gobou": "github:pooza/gobou#v0.3.0"
+    "gobou": "github:pooza/gobou#v0.4.0"
   },
   "scripts": {
     "lint": "biome check .",
@@ -32,7 +32,7 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 ```
 
 - ⚠⚠ **`@biomejs/biome` は gobou と同じ版に固定する**（`^` を付けない）。Vue のルールの一部は nursery（安定前）で、版が変わると挙動が変わりうる
-- ⚠ **gobou はタグで固定する**（`#v0.3.0`）。`#main` にしない
+- ⚠ **gobou はタグで固定する**（`#v0.4.0`）。`#main` にしない
 - ⚠ `vcs` は利用側に置く。共有の設定に入れると、Biome は gobou の側で `.gitignore` を探して落ちる
 
 ### 対象から外すもの
@@ -81,9 +81,11 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 - `noExplicitAny` は warn
 - a11y はグループごと warn（recommended に無い a11y のルールも warn で入る。0.2.0 で直した — 0.1.0 は error のままだった）
 - 認知的複雑度（`noExcessiveCognitiveComplexity`）は warn・しきい値 15（Biome の既定と同じ値を明示）。⚠ 入れた時点で利用側に大量に出うる（依頼元の 1 本で 135 件）ので、error にはしていない。減らすのは各利用側で（#8）
+  - ⚠⚠ **warn は終了コードに効かない。** `biome check .` は緑のままで、既定では 20 件しか表示しない（残りは「Diagnostics not shown」）。件数は `--max-diagnostics=none` で数え、PR に注釈を出すなら `--reporter=github`。減らし終えたら CI を `biome ci --error-on-warnings` にすると増えなくなる
   - ⚠ 自前の設定の `overrides` で `"includes": ["*.ts"]` と書くと、Biome 2 ではリポジトリ直下のファイルにしか当たらない。`src` の中まで効かせるなら `"**/*.ts"`。ルールの名前が書いてあっても効いているとは限らない
 - CSS の Tailwind の記法を許可する（#7）。v4 のディレクティブ（`@apply`・`@theme`・`@utility` など）は `css.parser.tailwindDirectives`、⚠ **v3 の `@tailwind` はそれだけでは通らない**ので `noUnknownAtRules` の `ignore` に `tailwind` を足している。それ以外の未知の at-rule は error のまま
-- 整形: スペース 2・1 行 100・シングルクォート・末尾のカンマ・セミコロンあり。Vue のテンプレートも Biome で整形する（`html.experimentalFullSupportEnabled`。実験的）
+  - ⚠ **v3 で許可しているのは `@tailwind`・`@apply`・`@layer` だけ。** `@screen`・`@variants`・`@responsive` と `theme()` は error のまま（2.6.6 で実測）。使っている利用側が出たら足す
+- 整形: スペース 2・1 行 100・シングルクォート（JS / TS。CSS は Biome の既定のダブルクォート）・末尾のカンマ・セミコロンあり。Vue のテンプレートも Biome で整形する（`html.experimentalFullSupportEnabled`。実験的）
 
 ## 版を上げるとき
 
@@ -107,7 +109,7 @@ PHP 8.3 以降が前提（pooza/ginseng-style#142）。
 {
   "repositories": [{ "type": "vcs", "url": "https://github.com/pooza/gobou" }],
   "require-dev": {
-    "pooza/gobou": "0.3.0",
+    "pooza/gobou": "0.4.0",
     "friendsofphp/php-cs-fixer": "3.95.29",
     "phpstan/phpstan": "2.3.5"
   }
