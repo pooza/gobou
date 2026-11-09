@@ -6,7 +6,8 @@
       "!**/*.min.js",
       "!**/dist",
       "!**/build",
-      "!**/coverage"
+      "!**/coverage",
+      "!**/*.md"
     ]
   },
   "formatter": {

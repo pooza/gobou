@@ -1,6 +1,6 @@
 {
   "name": "gobou",
-  "version": "0.4.1",
+  "version": "0.5.0",
   "private": true,
   "description": "Node.js プロジェクト共通の Biome 設定（ginseng-style の言語別の配布物）",
   "license": "MIT",

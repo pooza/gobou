@@ -12,7 +12,7 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 {
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "gobou": "github:pooza/gobou#v0.4.1"
+    "gobou": "github:pooza/gobou#v0.5.0"
   },
   "scripts": {
     "lint": "biome check .",
@@ -32,18 +32,37 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 ```
 
 - ⚠⚠ **`@biomejs/biome` は gobou と同じ版に固定する**（`^` を付けない）。Vue のルールの一部は nursery（安定前）で、版が変わると挙動が変わりうる
-- ⚠ **gobou はタグで固定する**（`#v0.4.1`）。`#main` にしない
+- ⚠ **gobou はタグで固定する**（`#v0.5.0`）。`#main` にしない
 - ⚠ `vcs` は利用側に置く。共有の設定に入れると、Biome は gobou の側で `.gitignore` を探して落ちる
 - ⚠ **Node の版は gobou では縛らない（#11）。** 利用側が読むのは `biome.json` だけなので、縛るのは Biome 自身の `engines`（2.6.6 は `>=14.21.3`）。⚠ yarn 1 は `engines` が合わないと入れるのを止めるので、それより古い Node では Biome の時点で入らない
   - ⚠⚠ **入っても動くとは限らない。** Linux の Biome のバイナリは glibc 2.30 以上を要る。Debian 10（buster・glibc 2.28）では install は通り、`biome` の実行時に `GLIBC_2.30 not found` で落ちる。公式の `node:14` / `node:16` イメージは buster なので、`-bullseye`（glibc 2.31・動くことを確認）以降を使う
 
 ### 対象から外すもの
 
-既定で `*.min.js` / `dist` / `build` / `coverage` を外す。同梱のベンダーのファイルがあれば、利用側で足す。⚠ **利用側では `**` を書かない**（共有の設定に既にある）。
+既定で `*.min.js` / `dist` / `build` / `coverage` / `*.md` を外す。同梱のベンダーのファイルがあれば、利用側で足す。⚠ **利用側では `**` を書かない**（共有の設定に既にある）。
 
 ```json
 { "files": { "includes": ["!public/vendor"] } }
 ```
+
+- ⚠ **`*.md` を外しているのは、表の整形が全角の文字を半角 1 つとして数えるから**（#12・2.6.6 で実測）。日本語の表は揃わず、差分だけが大きくなる（表 1 つで全行が変わる）
+
+### Vuetify のスロット名
+
+🔴 **`useVueValidVSlot` は Vuetify の `#item.<列のキー>` を「v-slot に修飾子は付かない」と誤検知する**（#12・2.6.6 で実測）。Vue 3 のコンパイラは v-slot に限ってドットをスロット名の一部として読むので、動きは正しい。Vuetify を使う利用側で切る。
+
+```json
+{
+  "overrides": [
+    {
+      "includes": ["**/*.vue"],
+      "linter": { "rules": { "nursery": { "useVueValidVSlot": "off" } } }
+    }
+  ]
+}
+```
+
+⚠ gobou の既定では外さない。Vuetify を使わない利用側では、本物の誤りを見つける検査なので。⚠ 切ると v-slot の本物の誤りも見逃すので、Vuetify の画面が一部なら `includes` をそのディレクトリに絞る
 
 ### `--write` のあとは動かして確かめる
 
@@ -111,7 +130,7 @@ PHP 8.3 以降が前提（pooza/ginseng-style#142）。
 {
   "repositories": [{ "type": "vcs", "url": "https://github.com/pooza/gobou" }],
   "require-dev": {
-    "pooza/gobou": "0.4.1",
+    "pooza/gobou": "0.5.0",
     "friendsofphp/php-cs-fixer": "3.95.29",
     "phpstan/phpstan": "2.3.5"
   }
