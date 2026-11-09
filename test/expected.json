@@ -10,6 +10,7 @@
   "p10_script_eqeq.vue": ["lint/suspicious/noDoubleEquals"],
   "p11_img_no_alt.vue": ["lint/a11y/useAltText@warning"],
   "p12_valid_vmodel.vue": ["lint/nursery/useVueValidVModel"],
+  "p13_vuetify_item_slot.vue": ["lint/nursery/useVueValidVSlot@error"],
   "t01_eqeq.ts": ["lint/suspicious/noDoubleEquals"],
   "t02_unused.ts": ["lint/correctness/noUnusedVariables"],
   "t03_clean.ts": [],

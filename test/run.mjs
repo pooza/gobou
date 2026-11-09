@@ -52,6 +52,29 @@ if (checked !== fixtures || summary.skipped) {
   );
 }
 
+// 🔴 既定で対象から外しているもの（#12 の `*.md`）が、また対象に戻っていないか。整形で見る（表を揃えるのは整形）
+let excluded;
+try {
+  excluded = execFileSync(process.execPath, [biome, 'format', '--reporter=json', 'test/excluded'], {
+    cwd: root,
+    encoding: 'utf8',
+    stdio: ['ignore', 'pipe', 'pipe'],
+  });
+} catch (e) {
+  // 対象が 1 つも無いと終了コードは 1（「No files were processed」）。それでも JSON は出る
+  excluded = e.stdout;
+}
+let excludedSummary;
+try {
+  excludedSummary = JSON.parse(excluded).summary ?? {};
+} catch {
+  fail('Biome の出力が JSON ではない（test/excluded）', String(excluded).slice(0, 2000));
+}
+const formatted = (excludedSummary.changed ?? 0) + (excludedSummary.unchanged ?? 0);
+if (formatted !== 0) {
+  fail(`test/excluded の ${formatted} 個が整形の対象に入っている（既定で外しているはず）`);
+}
+
 const actual = new Map();
 for (const d of report.diagnostics ?? []) {
   const path = d.location?.path;
