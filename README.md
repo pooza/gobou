@@ -12,7 +12,7 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 {
   "devDependencies": {
     "@biomejs/biome": "2.6.6",
-    "gobou": "github:pooza/gobou#v0.4.0"
+    "gobou": "github:pooza/gobou#v0.4.1"
   },
   "scripts": {
     "lint": "biome check .",
@@ -32,8 +32,9 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 ```
 
 - ⚠⚠ **`@biomejs/biome` は gobou と同じ版に固定する**（`^` を付けない）。Vue のルールの一部は nursery（安定前）で、版が変わると挙動が変わりうる
-- ⚠ **gobou はタグで固定する**（`#v0.4.0`）。`#main` にしない
+- ⚠ **gobou はタグで固定する**（`#v0.4.1`）。`#main` にしない
 - ⚠ `vcs` は利用側に置く。共有の設定に入れると、Biome は gobou の側で `.gitignore` を探して落ちる
+- ⚠ **Node の版は gobou では縛らない（#11）。** 利用側が読むのは `biome.json` だけなので、縛るのは Biome 自身の `engines`（2.6.6 は `>=14.21.3`）。⚠ yarn 1 は `engines` が合わないと入れるのを止めるので、それより古い Node では Biome の時点で入らない
 
 ### 対象から外すもの
 
@@ -89,7 +90,7 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 
 ## 版を上げるとき
 
-`test/fixtures/` の検体を Biome にかけ、`test/expected.json` と照らし合わせる（`npm test`）。PHP は `test/php/` の検体を `test/php/run.sh` で照らし合わせる。🔴 明示したルールが Biome の版で黙って外れると、検査が減ったことに誰も気づかないので、ここで赤にする。
+`test/fixtures/` の検体を Biome にかけ、`test/expected.json` と照らし合わせる（`npm test`）。⚠ テストを走らせるのは Node 20 以上（CI の matrix は 20 / 22 / 24）。⚠ これを `package.json` の `engines` に書かない — 利用側の install まで止める（#11）。PHP は `test/php/` の検体を `test/php/run.sh` で照らし合わせる。🔴 明示したルールが Biome の版で黙って外れると、検査が減ったことに誰も気づかないので、ここで赤にする。
 
 ## PHP
 
@@ -109,7 +110,7 @@ PHP 8.3 以降が前提（pooza/ginseng-style#142）。
 {
   "repositories": [{ "type": "vcs", "url": "https://github.com/pooza/gobou" }],
   "require-dev": {
-    "pooza/gobou": "0.4.0",
+    "pooza/gobou": "0.4.1",
     "friendsofphp/php-cs-fixer": "3.95.29",
     "phpstan/phpstan": "2.3.5"
   }
