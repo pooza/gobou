@@ -53,6 +53,8 @@ if (checked !== fixtures || summary.skipped) {
 }
 
 // 🔴 既定で対象から外しているもの（#12 の `*.md`）が、また対象に戻っていないか。整形で見る（表を揃えるのは整形）
+// 🔴 検体が無くても「0 個」で緑になる（存在しないパスでも summary は 0 件）ので、先に数える
+if (readdirSync(new URL('./excluded', import.meta.url)).length === 0) fail('test/excluded に検体が無い');
 let excluded;
 try {
   excluded = execFileSync(process.execPath, [biome, 'format', '--reporter=json', 'test/excluded'], {
@@ -61,18 +63,26 @@ try {
     stdio: ['ignore', 'pipe', 'pipe'],
   });
 } catch (e) {
-  // 対象が 1 つも無いと終了コードは 1（「No files were processed」）。それでも JSON は出る
+  // 対象が 1 つも無いと終了コードは 1（「No files were processed」）。それでも JSON は出る。
+  // それ以外（設定の誤りなど）は Biome の stderr を出して止める（lint 側と同じ）
+  if (e.status !== 1 || !e.stdout)
+    fail(`Biome が異常終了した（test/excluded・終了コード ${e.status}）`, e.stderr || e.message);
   excluded = e.stdout;
 }
-let excludedSummary;
+let excludedReport;
 try {
-  excludedSummary = JSON.parse(excluded).summary ?? {};
+  excludedReport = JSON.parse(excluded);
 } catch {
   fail('Biome の出力が JSON ではない（test/excluded）', String(excluded).slice(0, 2000));
 }
+const excludedSummary = excludedReport.summary ?? {};
 const formatted = (excludedSummary.changed ?? 0) + (excludedSummary.unchanged ?? 0);
 if (formatted !== 0) {
   fail(`test/excluded の ${formatted} 個が整形の対象に入っている（既定で外しているはず）`);
+}
+// ⚠ 読めなかったなど、外したのではない理由で 0 件になっていないか
+if ((excludedReport.diagnostics ?? []).length > 0) {
+  fail('test/excluded の整形で診断が出た', JSON.stringify(excludedReport.diagnostics).slice(0, 2000));
 }
 
 const actual = new Map();
