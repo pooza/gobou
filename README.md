@@ -35,6 +35,7 @@ Node.js と PHP のプロジェクト共通の lint・整形・静的解析の�
 - ⚠ **gobou はタグで固定する**（`#v0.4.1`）。`#main` にしない
 - ⚠ `vcs` は利用側に置く。共有の設定に入れると、Biome は gobou の側で `.gitignore` を探して落ちる
 - ⚠ **Node の版は gobou では縛らない（#11）。** 利用側が読むのは `biome.json` だけなので、縛るのは Biome 自身の `engines`（2.6.6 は `>=14.21.3`）。⚠ yarn 1 は `engines` が合わないと入れるのを止めるので、それより古い Node では Biome の時点で入らない
+  - ⚠⚠ **入っても動くとは限らない。** Linux の Biome のバイナリは glibc 2.30 以上を要る。Debian 10（buster・glibc 2.28）では install は通り、`biome` の実行時に `GLIBC_2.30 not found` で落ちる。公式の `node:14` / `node:16` イメージは buster なので、`-bullseye`（glibc 2.31・動くことを確認）以降を使う
 
 ### 対象から外すもの
 
