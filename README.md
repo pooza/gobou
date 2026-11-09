@@ -163,6 +163,7 @@ WordPress の `phpcs.xml.dist`:
 
 - ⚠ **PR で送ってよい。** 利用側は再現の文脈を持っているので、そのほうが往復が減る。受け取った gobou の側で Issue を起こして紐づける
 - 依頼には `request` ラベルを付ける（受け取った側が付けてもよい）
+- ⚠⚠ **gobou は public なので、他 org と private のリポジトリ名を書かない。** Issue・PR・コメントのどれでも。「利用側 A」のように伏せ、どのリポジトリかは利用側の Issue から gobou の Issue へ参照を張って辿れるようにする。⚠ 書いてから伏せても、GitHub の編集履歴に元の本文が残る
 
 ## License
 
